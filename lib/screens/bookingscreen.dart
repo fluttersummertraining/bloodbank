@@ -1,5 +1,5 @@
 import "package:flutter/material.dart";
-import "pageLayoutWidgets.dart";
+import '../common_widgets/pageLayoutWidgets.dart';
 import "package:intl/intl.dart";
 
 class BookingScreen extends StatefulWidget {

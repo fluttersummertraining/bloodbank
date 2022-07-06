@@ -1,4 +1,4 @@
-import 'package:bloodbank/screens/myBookings.dart';
+import 'package:bloodbank/screens/myBookingsScreen.dart';
 import 'package:flutter/material.dart';
 import "screens/homescreen.dart";
 import "screens/bookingscreen.dart";
