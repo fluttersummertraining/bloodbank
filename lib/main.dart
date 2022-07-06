@@ -1,3 +1,4 @@
+import 'package:bloodbank/screens/myBookings.dart';
 import 'package:flutter/material.dart';
 import "screens/homescreen.dart";
 import "screens/bookingscreen.dart";
@@ -18,6 +19,9 @@ class MyApp extends StatelessWidget {
       routes: {
         "/bookingScreen": (BuildContext context) {
           return BookingScreen();
+        },
+        "/myBookingsScreen": (BuildContext context) {
+          return MyBookingsScreen();
         }
       },
     );
