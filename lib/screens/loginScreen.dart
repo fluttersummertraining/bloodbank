@@ -13,6 +13,41 @@ class _LoginScreenState extends State<LoginScreen> {
   FirebaseAuth _auth = FirebaseAuth.instance;
   TextEditingController emailController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
+
+  Future<void> signIn() async {
+    try {
+      await _auth.signInWithEmailAndPassword(
+        email: emailController.text,
+        password: passwordController.text,
+      );
+      Navigator.pushNamedAndRemoveUntil(
+          context, '/homeScreen', (Route<dynamic> route) => false);
+    } on FirebaseAuthException catch (e) {
+      print(e.code);
+    } catch (e) {
+      print(e);
+    }
+  }
+
+  Future<void> signUp() async {
+    try {
+      await _auth.createUserWithEmailAndPassword(
+        email: emailController.text,
+        password: passwordController.text,
+      );
+      Navigator.pushNamedAndRemoveUntil(
+          context, '/homeScreen', (Route<dynamic> route) => false);
+    } on FirebaseAuthException catch (e) {
+      if (e.code == 'weak-password') {
+        print('The password provided is too weak.');
+      } else if (e.code == 'email-already-in-use') {
+        print('The account already exists for that email.');
+      }
+    } catch (e) {
+      print(e);
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -121,26 +156,9 @@ class _LoginScreenState extends State<LoginScreen> {
                               ),
                             ),
                             onPressed: () async {
-                              try {
-                                await _auth.createUserWithEmailAndPassword(
-                                  email: emailController.text,
-                                  password: passwordController.text,
-                                );
-                                Navigator.pushNamedAndRemoveUntil(
-                                    context,
-                                    '/homeScreen',
-                                    (Route<dynamic> route) => false);
-                              } on FirebaseAuthException catch (e) {
-                                if (e.code == 'weak-password') {
-                                  print('The password provided is too weak.');
-                                } else if (e.code == 'email-already-in-use') {
-                                  print(
-                                      'The account already exists for that email.');
-                                }
-                              } catch (e) {
-                                print(e);
-                              }
-                              //print(_auth.currentUser!.email);
+                              await signUp();
+
+                              //await signIn();
                             },
                           ),
                         ),
