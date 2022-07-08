@@ -63,14 +63,21 @@ class _BookingScreenState extends State<BookingScreen> {
               ),
             ),
           ),
-          Container(
-            width: 150,
-            child: DropdownButton<String>(
-              icon: dropDownIcon(),
-              items: bloodGroupItemsCreator(),
-              onChanged: onSelectingBloodGroup,
-              value: selectedBloodGroup,
-            ),
+          Row(
+            children: [
+              SizedBox(
+                width: 55,
+                child: DropdownButton<String>(
+                  icon: dropDownIcon(),
+                  items: bloodGroupItemsCreator(),
+                  onChanged: onSelectingBloodGroup,
+                  value: selectedBloodGroup,
+                ),
+              ),
+              SizedBox(
+                width: 67,
+              ),
+            ],
           ),
         ],
       ),

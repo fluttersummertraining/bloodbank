@@ -165,6 +165,7 @@ class GenericInfoCard extends StatelessWidget {
           Row(
             children: [
               leadingWidget,
+              SizedBox(width: 10),
               titleWidget,
             ],
           ),
