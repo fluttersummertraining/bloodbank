@@ -1,10 +1,10 @@
+import 'package:bloodbank/models/blood_bank.dart';
+import 'package:bloodbank/services/firestore_source.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import "package:flutter/material.dart";
 import '../common_widgets/pageLayoutWidgets.dart';
 import '../common_widgets/common_widgets.dart';
-import '../models/blood_bank.dart';
-import '../services/firestore_dao.dart';
 
 class HomeScreen extends StatefulWidget {
   HomeScreen({Key? key}) : super(key: key);
@@ -18,20 +18,12 @@ class _HomeScreenState extends State<HomeScreen> {
   CollectionReference bloodBanks =
       FirebaseFirestore.instance.collection('bloodBanks');
 
-  List<BloodBank> dbBloodBanks = [];
+  List<BloodBank> bb = [];
+
   @override
   void initState() {
     loadBloodBanks();
     super.initState();
-  }
-
-  loadBloodBanks() async {
-    List<BloodBank> dbBloodBanksDb =
-        await CloudDataSourceImpl(firebaseFirestore).bloodbanks;
-    setState(() {
-      dbBloodBanks = dbBloodBanksDb;
-    });
-    print("hello :" + dbBloodBanks.length.toString());
   }
 
   // Future<void> addBloodBank() {
@@ -41,12 +33,21 @@ class _HomeScreenState extends State<HomeScreen> {
   //       .catchError((error) => print("Failed to add BloodBank: $error"));
   // }
 
+  loadBloodBanks() async {
+    List<BloodBank> dbBloodBanks =
+        await CloudDataSourceImpl(firebaseFirestore).getDbBloodBanks();
+
+    setState(() {
+      bb = dbBloodBanks;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.white,
-        actions: [////////////////////????????????????????>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>////////////////////////////////////
+        actions: [
           TextButton(
             child: Icon(Icons.logout_rounded, color: Color(0xFFF46A6A)),
             onPressed: () async {
@@ -78,7 +79,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 height: 30,
               ),
 
-              ...loadBloodBankUI()
+              ...showBbUi(bb)
             ],
           ),
         ),
@@ -86,10 +87,10 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  List<Widget> loadBloodBankUI() {
-    List<Widget> uiElements = [];
+  List<Widget> showBbUi(List<BloodBank> dbBloodBanks) {
+    List<Widget> myUiComps = [];
     for (var i = 0; i < dbBloodBanks.length; i++) {
-      uiElements.add(Column(
+      myUiComps.add(Column(
         children: [
           SizedBox(
             height: 30,
@@ -102,6 +103,6 @@ class _HomeScreenState extends State<HomeScreen> {
         ],
       ));
     }
-    return uiElements;
+    return myUiComps;
   }
 }

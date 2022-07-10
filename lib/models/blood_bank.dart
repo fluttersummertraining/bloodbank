@@ -40,6 +40,19 @@ class BloodBank {
     };
   }
 
+  static BloodBank fromSnapShot(DocumentSnapshot snapshot) {
+    var map = snapshot.data() as Map;
+    if (map == null) {
+      return BloodBank(id: -1, name: "");
+    }
+
+    return BloodBank(
+      name: map['name'],
+      id: map['id'],
+      address: map['address'],
+    );
+  }
+
   String toJson(Map<String, dynamic> map) {
     return jsonEncode(map);
   }
@@ -50,17 +63,6 @@ class BloodBank {
 
   static BloodBank fromMap(Map<String, dynamic> map) {
     return BloodBank(id: map['id'], name: map['name'], address: map['address']);
-  }
-
-  factory BloodBank.fromSnapshot(DocumentSnapshot snap) {
-    var map = snap.data() as Map;
-    if (map == null) return BloodBank(id: -1, name: "");
-
-    return BloodBank(
-      name: map['name'],
-      id: map['id'],
-      address: map['address'],
-    );
   }
 
   bool validateBlood() {
