@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import "package:flutter/material.dart";
 import '../common_widgets/pageLayoutWidgets.dart';
 import "package:intl/intl.dart";
@@ -5,9 +6,13 @@ import '../models/blood_bank.dart';
 import '../models/donation_booking.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
+import '../services/firestore_source.dart';
+
 class BookingScreen extends StatefulWidget {
   BookingScreen({Key? key, required this.bloodBank}) : super(key: key);
   final BloodBank bloodBank;
+  final FirebaseAuth _auth = FirebaseAuth.instance;
+  FirebaseFirestore firebaseFirestore = FirebaseFirestore.instance;
   @override
   State<BookingScreen> createState() => _BookingScreenState();
 }
@@ -179,13 +184,20 @@ class _BookingScreenState extends State<BookingScreen> {
                         ),
                       ),
                     ),
-                    onPressed: () {
-                      /*DonationBooking donationBooking = DonationBooking(
+                    onPressed: () async {
+                      DonationBooking donationBooking = DonationBooking(
                         bbID: widget.bloodBank.id,
                         bloodGroup: selectedBloodGroup,
-                        userID: 
-                      );*/
-                      //Navigator.pushNamed(context, "/myBookingsScreen");
+                        userID: widget._auth.currentUser!.uid,
+                        bbName: widget.bloodBank.name,
+                        date: selectedDate,
+                        address: widget.bloodBank.address,
+                        fireStoreID: null,
+                      );
+                      var x =
+                          await CloudDataSourceImpl(widget.firebaseFirestore);
+                      await x.createDonationBooking(donationBooking);
+                      Navigator.pushNamed(context, "/myBookingsScreen");
                     }),
               ),
             ),
