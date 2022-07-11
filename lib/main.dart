@@ -5,6 +5,7 @@ import "screens/homescreen.dart";
 import "screens/bookingscreen.dart";
 import "package:firebase_core/firebase_core.dart";
 import 'package:bloodbank/screens/firstScreen.dart';
+import 'models/blood_bank.dart';
 //import 'dart:math';
 
 void main() async {
@@ -22,9 +23,6 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       home: FirstScreen(),
       routes: {
-        "/bookingScreen": (BuildContext context) {
-          return BookingScreen();
-        },
         "/myBookingsScreen": (BuildContext context) {
           return MyBookingsScreen();
         },
@@ -33,6 +31,22 @@ class MyApp extends StatelessWidget {
         },
         "/loginScreen": (BuildContext context) {
           return LoginScreen();
+        }
+      },
+      onGenerateRoute: (settings) {
+        switch (settings.name) {
+          case '/bookingScreen':
+            {
+              final BloodBank bloodBank = settings.arguments as BloodBank;
+              return MaterialPageRoute(builder: (_) => BookingScreen(bloodBank:bloodBank));
+            }
+
+          default:
+            return MaterialPageRoute(
+                builder: (_) => Scaffold(
+                      body: Center(
+                          child: Text('No route defined for ${settings.name}')),
+                    ));
         }
       },
     );

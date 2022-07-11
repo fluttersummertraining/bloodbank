@@ -8,16 +8,19 @@ class BloodBankInfo extends StatelessWidget {
     required this.distance,
     required this.isGovernment,
     this.displayBloodGroupAvailability = false,
+    required this.onPressed,
   }) : super(key: key);
 
   final String bloodBankName;
   final double distance;
   final bool isGovernment;
   final bool displayBloodGroupAvailability;
+  final void Function() onPressed;
 
   @override
   Widget build(BuildContext context) {
     return PressableGenericInfoCard(
+      onPressed: onPressed,
       leadingWidget: BloodBankTypeIndicator(isGovernment: isGovernment),
       titleWidget: BloodBankNameDisplay(bloodBankName: bloodBankName),
       info: "${distance} km",
@@ -31,15 +34,18 @@ class BookingInfo extends StatelessWidget {
     required this.bloodBankName,
     required this.date,
     required this.isGovernment,
+    required this.onPressed,
   }) : super(key: key);
 
   final String bloodBankName;
   final DateTime date;
   final bool isGovernment;
+  final void Function() onPressed;
 
   @override
   Widget build(BuildContext context) {
     return PressableGenericInfoCard(
+      onPressed: onPressed,
       leadingWidget: BloodBankTypeIndicator(isGovernment: isGovernment),
       titleWidget: BloodBankNameDisplay(bloodBankName: bloodBankName),
       info: DateFormat('dd MMMM yyyy').format(date),
@@ -112,17 +118,17 @@ class PressableGenericInfoCard extends StatelessWidget {
     required this.leadingWidget,
     required this.titleWidget,
     required this.info,
+    required this.onPressed,
   }) : super(key: key);
 
   final String info;
   final Widget leadingWidget;
   final Widget titleWidget;
+  final void Function() onPressed;
   @override
   Widget build(BuildContext context) {
     return ElevatedButton(
-      onPressed: () {
-        Navigator.pushNamed(context, "/bookingScreen");
-      },
+      onPressed: onPressed,
       style: ElevatedButton.styleFrom(
         primary: Color(0xFFECEBEB),
         shape: RoundedRectangleBorder(

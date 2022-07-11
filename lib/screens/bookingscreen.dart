@@ -1,10 +1,13 @@
 import "package:flutter/material.dart";
 import '../common_widgets/pageLayoutWidgets.dart';
 import "package:intl/intl.dart";
+import '../models/blood_bank.dart';
+import '../models/donation_booking.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 class BookingScreen extends StatefulWidget {
-  BookingScreen({Key? key}) : super(key: key);
-
+  BookingScreen({Key? key, required this.bloodBank}) : super(key: key);
+  final BloodBank bloodBank;
   @override
   State<BookingScreen> createState() => _BookingScreenState();
 }
@@ -102,7 +105,7 @@ class _BookingScreenState extends State<BookingScreen> {
                 children: [
                   PageTitle(title: "Book Slot"), //donate blood
                   PageSubtitle(
-                    subtitle: "Sarita Blood Bank",
+                    subtitle: widget.bloodBank.name!,
                   ),
                 ],
               ),
@@ -177,7 +180,12 @@ class _BookingScreenState extends State<BookingScreen> {
                       ),
                     ),
                     onPressed: () {
-                      Navigator.pushNamed(context, "/myBookingsScreen");
+                      /*DonationBooking donationBooking = DonationBooking(
+                        bbID: widget.bloodBank.id,
+                        bloodGroup: selectedBloodGroup,
+                        userID: 
+                      );*/
+                      //Navigator.pushNamed(context, "/myBookingsScreen");
                     }),
               ),
             ),

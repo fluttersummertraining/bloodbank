@@ -1,3 +1,6 @@
+import 'package:bloodbank/models/blood_bank.dart';
+import 'package:bloodbank/services/firestore_source.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import "package:flutter/material.dart";
 import '../common_widgets/pageLayoutWidgets.dart';
@@ -11,6 +14,34 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   FirebaseAuth _auth = FirebaseAuth.instance;
+  FirebaseFirestore firebaseFirestore = FirebaseFirestore.instance;
+  CollectionReference bloodBanks =
+      FirebaseFirestore.instance.collection('bloodBanks');
+
+  List<BloodBank> bb = [];
+
+  @override
+  void initState() {
+    loadBloodBanks();
+    super.initState();
+  }
+
+  // Future<void> addBloodBank() {
+  //   return bloodBanks
+  //       .add({'full_name': "Sarita Blood Bank"})
+  //       .then((value) => print("BloodBank Added"))
+  //       .catchError((error) => print("Failed to add BloodBank: $error"));
+  // }
+
+  loadBloodBanks() async {
+    List<BloodBank> dbBloodBanks =
+        await CloudDataSourceImpl(firebaseFirestore).getDbBloodBanks();
+
+    setState(() {
+      bb = dbBloodBanks;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -47,32 +78,35 @@ class _HomeScreenState extends State<HomeScreen> {
               SizedBox(
                 height: 30,
               ),
-              BloodBankInfo(
-                bloodBankName: "Sarita",
-                distance: 7,
-                isGovernment: false,
-              ),
 
-              SizedBox(
-                height: 15,
-              ),
-              BloodBankInfo(
-                bloodBankName: "Sarita",
-                distance: 7,
-                isGovernment: false,
-              ),
-              SizedBox(
-                height: 15,
-              ),
-              BloodBankInfo(
-                bloodBankName: "Madarsa",
-                distance: 4.7,
-                isGovernment: true,
-              ),
+              ...showBbUi(bb)
             ],
           ),
         ),
       ),
     );
+  }
+
+  List<Widget> showBbUi(List<BloodBank> dbBloodBanks) {
+    List<Widget> myUiComps = [];
+    for (var i = 0; i < dbBloodBanks.length; i++) {
+      myUiComps.add(Column(
+        children: [
+          SizedBox(
+            height: 30,
+          ),
+          BloodBankInfo(
+            onPressed: () {
+              Navigator.pushNamed(context, "/bookingScreen",
+                  arguments: dbBloodBanks[i]);
+            },
+            bloodBankName: dbBloodBanks[i].name!,
+            distance: 7,
+            isGovernment: false,
+          ),
+        ],
+      ));
+    }
+    return myUiComps;
   }
 }

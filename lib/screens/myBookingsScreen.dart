@@ -20,6 +20,7 @@ class MyBookingsScreen extends StatelessWidget {
               ),
 
               BookingInfo(
+                  onPressed: () {},
                   bloodBankName: "Sarita",
                   date: DateTime.now(),
                   isGovernment: true),
