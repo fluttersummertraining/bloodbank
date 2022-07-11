@@ -1,9 +1,50 @@
 import 'package:bloodbank/common_widgets/common_widgets.dart';
+import 'package:bloodbank/models/donation_booking.dart';
+import 'package:bloodbank/services/firestore_source.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import "package:flutter/material.dart";
 import '../common_widgets/pageLayoutWidgets.dart';
 
-class MyBookingsScreen extends StatelessWidget {
-  const MyBookingsScreen({Key? key}) : super(key: key);
+class MyBookingsScreen extends StatefulWidget {
+  MyBookingsScreen({Key? key}) : super(key: key);
+  final FirebaseFirestore firebaseFirestore = FirebaseFirestore.instance;
+  @override
+  State<MyBookingsScreen> createState() => _MyBookingsScreenState();
+}
+
+class _MyBookingsScreenState extends State<MyBookingsScreen> {
+  bool isDataLoaded = false;
+  List<DonationBooking?> donationBookings = [];
+  @override
+  void initState() {
+    loadUserDonationBookings();
+    super.initState();
+  }
+
+  loadUserDonationBookings() async {
+    var x = await CloudDataSourceImpl(widget.firebaseFirestore);
+    donationBookings = await x.getUserDonationBookings();
+    setState(() {
+      isDataLoaded = true;
+    });
+  }
+
+  List<Widget> getBookings() {
+    List<Widget> widgets = [];
+
+    for (int i = 0; i < donationBookings.length; i++) {
+      if (donationBookings[i] != null) {
+        widgets.add(
+          BookingInfo(
+              onPressed: () {},
+              bloodBankName: donationBookings[i]!.bbName!,
+              date: donationBookings[i]!.date!,
+              isGovernment: true),
+        );
+      }
+    }
+    return widgets;
+  }
 
   Widget build(BuildContext context) {
     return Scaffold(
@@ -19,11 +60,7 @@ class MyBookingsScreen extends StatelessWidget {
                 height: 30,
               ),
 
-              BookingInfo(
-                  onPressed: () {},
-                  bloodBankName: "Sarita",
-                  date: DateTime.now(),
-                  isGovernment: true),
+              ...getBookings(),
             ],
           ),
         ),
