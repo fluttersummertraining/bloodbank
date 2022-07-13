@@ -27,6 +27,8 @@ class _BookingScreenState extends State<BookingScreen> {
   void onSelectingBloodGroup(String? value) {
     setState(() {
       selectedBloodGroup = value;
+      if (widget.donationBooking != null)
+        widget.donationBooking!.bloodGroup = value;
     });
   }
 
@@ -104,6 +106,22 @@ class _BookingScreenState extends State<BookingScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      floatingActionButton: widget.donationBooking != null
+          ? FloatingActionButton(
+              backgroundColor: Colors.white,
+              child: Icon(
+                Icons.delete,
+                color: Color(0xFFF46A6A),
+              ),
+              onPressed: () async {
+                var x = await CloudDataSourceImpl(widget.firebaseFirestore);
+
+                await x.deleteDonationBooking(widget.donationBooking!);
+
+                Navigator.pushNamed(context, "/myBookingsScreen");
+              },
+            )
+          : null,
       backgroundColor: Color(0xFFF46A6A),
       body: SafeArea(
         child: Column(
@@ -166,6 +184,8 @@ class _BookingScreenState extends State<BookingScreen> {
                         if (x != null)
                           setState(() {
                             selectedDate = x;
+                            if (widget.donationBooking != null)
+                              widget.donationBooking!.date = selectedDate;
                           });
                       },
                     ),
@@ -193,6 +213,8 @@ class _BookingScreenState extends State<BookingScreen> {
                       ),
                     ),
                     onPressed: () async {
+                      var x =
+                          await CloudDataSourceImpl(widget.firebaseFirestore);
                       if (widget.bloodBank != null) {
                         DonationBooking tempDonationBooking = DonationBooking(
                           bbID: widget.bloodBank!.id,
@@ -203,11 +225,12 @@ class _BookingScreenState extends State<BookingScreen> {
                           address: widget.bloodBank!.address,
                           fireStoreID: null,
                         );
-                        var x =
-                            await CloudDataSourceImpl(widget.firebaseFirestore);
+
                         await x.createDonationBooking(tempDonationBooking);
                       }
-
+                      if (widget.donationBooking != null) {
+                        await x.updateDonationBooking(widget.donationBooking!);
+                      }
                       Navigator.pushNamed(context, "/myBookingsScreen");
                     }),
               ),

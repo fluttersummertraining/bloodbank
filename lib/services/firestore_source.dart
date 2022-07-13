@@ -31,7 +31,10 @@ class CloudDataSourceImpl {
   Future<void> createDonationBooking(DonationBooking donationBooking) async {
     var collection =
         await firestoreInstance.collection(collectionBookedDonations);
-    var ref = await collection.add(donationBooking.toMap());
+    Map<String, dynamic> data = donationBooking.toMap();
+    //String? id = data['fireStoreID'];
+    data.remove('fireStoreID');
+    var ref = await collection.add(data);
   }
 
   Future<List<DonationBooking?>> getUserDonationBookings() async {
@@ -45,5 +48,23 @@ class CloudDataSourceImpl {
     List<DocumentSnapshot> documents = snapshot.docs;
 
     return documents.map((e) => DonationBooking.fromSnapShot(e)).toList();
+  }
+
+  Future<void> updateDonationBooking(DonationBooking donationBooking) async {
+    var docRef = await firestoreInstance
+        .collection(collectionBookedDonations)
+        .doc(donationBooking.fireStoreID);
+
+    Map<String, dynamic> data = donationBooking.toMap();
+    //String? id = data['fireStoreID'];
+    data.remove('fireStoreID');
+    var ref = await docRef.update(data);
+  }
+
+  Future<void> deleteDonationBooking(DonationBooking donationBooking) async {
+    var docRef = await firestoreInstance
+        .collection(collectionBookedDonations)
+        .doc(donationBooking.fireStoreID);
+    await docRef.delete();
   }
 }

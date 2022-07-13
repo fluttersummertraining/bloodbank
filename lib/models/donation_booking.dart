@@ -28,6 +28,7 @@ class DonationBooking {
       'userID': userID,
       'bbName': bbName,
       'date': date.toString(),
+      'fireStoreID': fireStoreID,
     };
   }
 
@@ -45,7 +46,7 @@ class DonationBooking {
       bbName: map['bbName'],
       date: DateTime.parse(map['date']),
       //TODO::Store doc id instead of empty string
-      fireStoreID: "",
+      fireStoreID: snapshot.id,
     );
   }
 }
