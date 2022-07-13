@@ -60,6 +60,17 @@ class _MyBookingsScreenState extends State<MyBookingsScreen> {
 
   Widget build(BuildContext context) {
     return Scaffold(
+      floatingActionButton: FloatingActionButton(
+        backgroundColor: Colors.white,
+        child: Icon(
+          Icons.add,
+          color: Color(0xFFF46A6A),
+          size: 32,
+        ),
+        onPressed: () {
+          Navigator.pushNamed(context, '/homeScreen');
+        },
+      ),
       backgroundColor: Color(0xFFF46A6A),
       body: SafeArea(
         child: Padding(

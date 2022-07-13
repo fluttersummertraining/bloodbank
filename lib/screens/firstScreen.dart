@@ -1,3 +1,4 @@
+import 'package:bloodbank/screens/myBookingsScreen.dart';
 import "package:flutter/material.dart";
 import "loginScreen.dart";
 import "package:firebase_auth/firebase_auth.dart";
@@ -17,6 +18,6 @@ class _FirstScreenState extends State<FirstScreen> {
     if (_auth.currentUser == null) {
       return LoginScreen();
     } else
-      return HomeScreen();
+      return MyBookingsScreen();
   }
 }

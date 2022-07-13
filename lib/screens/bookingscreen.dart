@@ -118,7 +118,8 @@ class _BookingScreenState extends State<BookingScreen> {
 
                 await x.deleteDonationBooking(widget.donationBooking!);
 
-                Navigator.pushNamed(context, "/myBookingsScreen");
+                Navigator.pushNamedAndRemoveUntil(
+                    context, "/myBookingsScreen", (route) => false);
               },
             )
           : null,
@@ -231,7 +232,9 @@ class _BookingScreenState extends State<BookingScreen> {
                       if (widget.donationBooking != null) {
                         await x.updateDonationBooking(widget.donationBooking!);
                       }
-                      Navigator.pushNamed(context, "/myBookingsScreen");
+                      //Navigator.pushNamedAndRemoveUntil(context, newRouteName, )
+                      Navigator.pushNamedAndRemoveUntil(
+                          context, "/myBookingsScreen", (route) => false);
                     }),
               ),
             ),
