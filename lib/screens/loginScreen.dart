@@ -142,7 +142,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         child: Center(
                           child: TextButton(
                             child: Text(
-                              "Sign Up",
+                              "Sign In",
                             ),
                             style: TextButton.styleFrom(
                               backgroundColor: Color(0xFFECEBEB),
@@ -156,9 +156,8 @@ class _LoginScreenState extends State<LoginScreen> {
                               ),
                             ),
                             onPressed: () async {
-                              await signUp();
-
-                              //await signIn();
+                              //await signUp();
+                              await signIn();
                             },
                           ),
                         ),

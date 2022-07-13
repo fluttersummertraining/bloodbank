@@ -1,3 +1,4 @@
+import 'package:bloodbank/models/donation_booking.dart';
 import 'package:bloodbank/screens/loginScreen.dart';
 import 'package:bloodbank/screens/myBookingsScreen.dart';
 import 'package:flutter/material.dart';
@@ -37,8 +38,18 @@ class MyApp extends StatelessWidget {
         switch (settings.name) {
           case '/bookingScreen':
             {
-              final BloodBank bloodBank = settings.arguments as BloodBank;
-              return MaterialPageRoute(builder: (_) => BookingScreen(bloodBank:bloodBank));
+              if (settings.arguments is BloodBank) {
+                final BloodBank bloodBank = settings.arguments as BloodBank;
+                return MaterialPageRoute(
+                    builder: (_) => BookingScreen(bloodBank: bloodBank));
+              } else {
+                final DonationBooking donationBooking =
+                    settings.arguments as DonationBooking;
+                return MaterialPageRoute(
+                    builder: (_) => BookingScreen.fromBookingInfo(
+                          donationBooking: donationBooking,
+                        ));
+              }
             }
 
           default:

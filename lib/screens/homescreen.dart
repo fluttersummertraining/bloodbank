@@ -26,13 +26,6 @@ class _HomeScreenState extends State<HomeScreen> {
     super.initState();
   }
 
-  // Future<void> addBloodBank() {
-  //   return bloodBanks
-  //       .add({'full_name': "Sarita Blood Bank"})
-  //       .then((value) => print("BloodBank Added"))
-  //       .catchError((error) => print("Failed to add BloodBank: $error"));
-  // }
-
   loadBloodBanks() async {
     List<BloodBank> dbBloodBanks =
         await CloudDataSourceImpl(firebaseFirestore).getDbBloodBanks();

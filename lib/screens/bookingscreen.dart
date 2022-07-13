@@ -4,13 +4,19 @@ import '../common_widgets/pageLayoutWidgets.dart';
 import "package:intl/intl.dart";
 import '../models/blood_bank.dart';
 import '../models/donation_booking.dart';
+
 import 'package:firebase_auth/firebase_auth.dart';
 
 import '../services/firestore_source.dart';
 
 class BookingScreen extends StatefulWidget {
-  BookingScreen({Key? key, required this.bloodBank}) : super(key: key);
-  final BloodBank bloodBank;
+  BookingScreen({Key? key, required this.bloodBank})
+      : donationBooking = null,
+        super(key: key);
+  BookingScreen.fromBookingInfo({required this.donationBooking})
+      : bloodBank = null;
+  final BloodBank? bloodBank;
+  final DonationBooking? donationBooking;
   final FirebaseAuth _auth = FirebaseAuth.instance;
   FirebaseFirestore firebaseFirestore = FirebaseFirestore.instance;
   @override
@@ -110,7 +116,9 @@ class _BookingScreenState extends State<BookingScreen> {
                 children: [
                   PageTitle(title: "Book Slot"), //donate blood
                   PageSubtitle(
-                    subtitle: widget.bloodBank.name!,
+                    subtitle: widget.bloodBank != null
+                        ? widget.bloodBank!.name!
+                        : widget.donationBooking!.bbName!,
                   ),
                 ],
               ),
@@ -185,18 +193,21 @@ class _BookingScreenState extends State<BookingScreen> {
                       ),
                     ),
                     onPressed: () async {
-                      DonationBooking donationBooking = DonationBooking(
-                        bbID: widget.bloodBank.id,
-                        bloodGroup: selectedBloodGroup,
-                        userID: widget._auth.currentUser!.uid,
-                        bbName: widget.bloodBank.name,
-                        date: selectedDate,
-                        address: widget.bloodBank.address,
-                        fireStoreID: null,
-                      );
-                      var x =
-                          await CloudDataSourceImpl(widget.firebaseFirestore);
-                      await x.createDonationBooking(donationBooking);
+                      if (widget.bloodBank != null) {
+                        DonationBooking tempDonationBooking = DonationBooking(
+                          bbID: widget.bloodBank!.id,
+                          bloodGroup: selectedBloodGroup,
+                          userID: widget._auth.currentUser!.uid,
+                          bbName: widget.bloodBank!.name,
+                          date: selectedDate,
+                          address: widget.bloodBank!.address,
+                          fireStoreID: null,
+                        );
+                        var x =
+                            await CloudDataSourceImpl(widget.firebaseFirestore);
+                        await x.createDonationBooking(tempDonationBooking);
+                      }
+
                       Navigator.pushNamed(context, "/myBookingsScreen");
                     }),
               ),

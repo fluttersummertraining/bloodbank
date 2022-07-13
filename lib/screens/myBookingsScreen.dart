@@ -29,17 +29,29 @@ class _MyBookingsScreenState extends State<MyBookingsScreen> {
     });
   }
 
-  List<Widget> getBookings() {
+  List<Widget> getBookings(BuildContext context) {
     List<Widget> widgets = [];
 
     for (int i = 0; i < donationBookings.length; i++) {
       if (donationBookings[i] != null) {
         widgets.add(
           BookingInfo(
-              onPressed: () {},
+              onPressed: () {
+                print("abcd");
+                Navigator.pushNamed(
+                  context,
+                  '/bookingScreen',
+                  arguments: donationBookings[i],
+                );
+              },
               bloodBankName: donationBookings[i]!.bbName!,
               date: donationBookings[i]!.date!,
               isGovernment: true),
+        );
+        widgets.add(
+          SizedBox(
+            height: 10,
+          ),
         );
       }
     }
@@ -52,16 +64,18 @@ class _MyBookingsScreenState extends State<MyBookingsScreen> {
       body: SafeArea(
         child: Padding(
           padding: const EdgeInsets.all(30.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              PageTitle(title: "My Bookings"), //donate blood
-              SizedBox(
-                height: 30,
-              ),
+          child: SingleChildScrollView(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                PageTitle(title: "My Bookings"), //donate blood
+                SizedBox(
+                  height: 30,
+                ),
 
-              ...getBookings(),
-            ],
+                ...getBookings(context),
+              ],
+            ),
           ),
         ),
       ),
