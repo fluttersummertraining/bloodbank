@@ -24,7 +24,7 @@ class _LoginScreenState extends State<LoginScreen> {
         password: passwordController.text,
       );
       Navigator.pushNamedAndRemoveUntil(
-          context, myBookingScreenID, (Route<dynamic> route) => false);
+          context, homeScreenID, (Route<dynamic> route) => false);
     } on FirebaseAuthException catch (e) {
       print(e.code);
     } catch (e) {
@@ -39,7 +39,7 @@ class _LoginScreenState extends State<LoginScreen> {
         password: passwordController.text,
       );
       Navigator.pushNamedAndRemoveUntil(
-          context, homeScreenID, (Route<dynamic> route) => false);
+          context, viewBloodBankScreenID, (Route<dynamic> route) => false);
     } on FirebaseAuthException catch (e) {
       if (e.code == 'weak-password') {
         print('The password provided is too weak.');

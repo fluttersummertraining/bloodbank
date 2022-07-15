@@ -137,7 +137,7 @@ class _BookingScreenState extends State<BookingScreen> {
                 await x.deleteDonationBooking(widget.donationBooking!);
 
                 Navigator.pushNamedAndRemoveUntil(
-                    context, myBookingScreenID, (route) => false);
+                    context, homeScreenID, (route) => false);
               },
             )
           : null,
@@ -241,7 +241,7 @@ class _BookingScreenState extends State<BookingScreen> {
                       }
 
                       Navigator.pushNamedAndRemoveUntil(
-                          context, myBookingScreenID, (route) => false);
+                          context, homeScreenID, (route) => false);
                     }),
               ),
             ),

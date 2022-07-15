@@ -1,18 +1,26 @@
 import 'package:flutter/material.dart';
 import 'package:bloodbank/models/donation_booking.dart';
 import 'package:bloodbank/screens/loginScreen.dart';
-import 'package:bloodbank/screens/myBookingsScreen.dart';
-import "../screens/homescreen.dart";
+import 'package:bloodbank/screens/homeScreen.dart';
+import '../screens/viewBloodBanksScreen.dart';
 import "../screens/bookingscreen.dart";
 import '../models/blood_bank.dart';
+import 'package:bloodbank/screens/firstScreen.dart';
 
 const bookingScreenID = "/bookingScreen";
-const homeScreenID = "/homeScreen";
+const viewBloodBankScreenID = "/viewBloodBankScreen";
 const loginScreenID = "/loginScreen";
-const myBookingScreenID = "/myBookingsScreen";
+const homeScreenID = "/homeScreen";
+const firstScreenID = "/firstScreen";
 
 Route<dynamic>? routing(RouteSettings settings) {
   switch (settings.name) {
+    case firstScreenID:
+      {
+        return MaterialPageRoute(
+          builder: (_) => FirstScreen(),
+        );
+      }
     case bookingScreenID:
       {
         if (settings.arguments is BloodBank) {
@@ -28,16 +36,16 @@ Route<dynamic>? routing(RouteSettings settings) {
                   ));
         }
       }
-    case myBookingScreenID:
-      {
-        return MaterialPageRoute(
-          builder: (_) => MyBookingsScreen(),
-        );
-      }
     case homeScreenID:
       {
         return MaterialPageRoute(
           builder: (_) => HomeScreen(),
+        );
+      }
+    case viewBloodBankScreenID:
+      {
+        return MaterialPageRoute(
+          builder: (_) => ViewBloodBanksScreen(),
         );
       }
     case loginScreenID:

@@ -1,8 +1,8 @@
-import 'package:bloodbank/screens/myBookingsScreen.dart';
+import 'package:bloodbank/screens/homeScreen.dart';
 import "package:flutter/material.dart";
 import "loginScreen.dart";
 import "package:firebase_auth/firebase_auth.dart";
-import "homescreen.dart";
+import 'viewBloodBanksScreen.dart';
 
 class FirstScreen extends StatefulWidget {
   FirstScreen({Key? key}) : super(key: key);
@@ -18,6 +18,6 @@ class _FirstScreenState extends State<FirstScreen> {
     if (_auth.currentUser == null) {
       return LoginScreen();
     } else
-      return MyBookingsScreen();
+      return HomeScreen();
   }
 }

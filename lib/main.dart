@@ -18,7 +18,8 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      home: FirstScreen(),
+      //home: FirstScreen(),
+      initialRoute: firstScreenID,
       onGenerateRoute: routing,
     );
   }
