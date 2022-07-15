@@ -21,7 +21,7 @@ class _LoginScreenState extends State<LoginScreen> {
         password: passwordController.text,
       );
       Navigator.pushNamedAndRemoveUntil(
-          context, '/homeScreen', (Route<dynamic> route) => false);
+          context, '/myBookingsScreen', (Route<dynamic> route) => false);
     } on FirebaseAuthException catch (e) {
       print(e.code);
     } catch (e) {

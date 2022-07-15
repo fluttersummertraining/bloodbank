@@ -16,7 +16,7 @@ class BookingScreen extends StatefulWidget {
   BookingScreen.fromBookingInfo({required this.donationBooking})
       : bloodBank = null;
   final BloodBank? bloodBank;
-  final DonationBooking? donationBooking;
+  DonationBooking? donationBooking;
   final FirebaseAuth _auth = FirebaseAuth.instance;
   FirebaseFirestore firebaseFirestore = FirebaseFirestore.instance;
   @override
@@ -24,9 +24,29 @@ class BookingScreen extends StatefulWidget {
 }
 
 class _BookingScreenState extends State<BookingScreen> {
+  List<String> bloodGroups = ["O+", "O-", "A+", "A-"];
+
+  bool isEditScreen = false;
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    if (widget.donationBooking == null) {
+      widget.donationBooking = DonationBooking(
+        bbID: widget.bloodBank!.id,
+        bloodGroup: "O+",
+        userID: widget._auth.currentUser!.uid,
+        bbName: widget.bloodBank!.name,
+        date: DateTime.now(),
+        address: widget.bloodBank!.address,
+        fireStoreID: null,
+      );
+    } else {
+      isEditScreen = true;
+    }
+  }
+
   void onSelectingBloodGroup(String? value) {
     setState(() {
-      selectedBloodGroup = value;
       if (widget.donationBooking != null)
         widget.donationBooking!.bloodGroup = value;
     });
@@ -87,7 +107,7 @@ class _BookingScreenState extends State<BookingScreen> {
                   icon: dropDownIcon(),
                   items: bloodGroupItemsCreator(),
                   onChanged: onSelectingBloodGroup,
-                  value: selectedBloodGroup,
+                  value: widget.donationBooking!.bloodGroup,
                 ),
               ),
               SizedBox(
@@ -100,13 +120,10 @@ class _BookingScreenState extends State<BookingScreen> {
     );
   }
 
-  String? selectedBloodGroup = "O+";
-  List<String> bloodGroups = ["O+", "O-", "A+", "A-"];
-  DateTime selectedDate = DateTime.now();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      floatingActionButton: widget.donationBooking != null
+      floatingActionButton: isEditScreen
           ? FloatingActionButton(
               backgroundColor: Colors.white,
               child: Icon(
@@ -167,7 +184,8 @@ class _BookingScreenState extends State<BookingScreen> {
                     width: 150,
                     child: TextButton(
                       child: Text(
-                        DateFormat('dd MMMM yyyy').format(selectedDate),
+                        DateFormat('dd MMMM yyyy')
+                            .format(widget.donationBooking!.date!),
                         style: TextStyle(
                           color: Colors.black,
                           fontSize: 16,
@@ -184,9 +202,8 @@ class _BookingScreenState extends State<BookingScreen> {
                         );
                         if (x != null)
                           setState(() {
-                            selectedDate = x;
                             if (widget.donationBooking != null)
-                              widget.donationBooking!.date = selectedDate;
+                              widget.donationBooking!.date = x;
                           });
                       },
                     ),
@@ -216,20 +233,9 @@ class _BookingScreenState extends State<BookingScreen> {
                     onPressed: () async {
                       var x =
                           await CloudDataSourceImpl(widget.firebaseFirestore);
-                      if (widget.bloodBank != null) {
-                        DonationBooking tempDonationBooking = DonationBooking(
-                          bbID: widget.bloodBank!.id,
-                          bloodGroup: selectedBloodGroup,
-                          userID: widget._auth.currentUser!.uid,
-                          bbName: widget.bloodBank!.name,
-                          date: selectedDate,
-                          address: widget.bloodBank!.address,
-                          fireStoreID: null,
-                        );
-
-                        await x.createDonationBooking(tempDonationBooking);
-                      }
-                      if (widget.donationBooking != null) {
+                      if (!isEditScreen) {
+                        await x.createDonationBooking(widget.donationBooking!);
+                      } else {
                         await x.updateDonationBooking(widget.donationBooking!);
                       }
                       //Navigator.pushNamedAndRemoveUntil(context, newRouteName, )
