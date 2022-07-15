@@ -1,9 +1,11 @@
 import 'package:bloodbank/common_widgets/common_widgets.dart';
 import 'package:bloodbank/models/donation_booking.dart';
 import 'package:bloodbank/services/firestore_source.dart';
+import 'package:bloodbank/services/routing.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import "package:flutter/material.dart";
 import '../common_widgets/pageLayoutWidgets.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 class MyBookingsScreen extends StatefulWidget {
   MyBookingsScreen({Key? key}) : super(key: key);
@@ -15,6 +17,7 @@ class MyBookingsScreen extends StatefulWidget {
 class _MyBookingsScreenState extends State<MyBookingsScreen> {
   bool isDataLoaded = false;
   List<DonationBooking?> donationBookings = [];
+  FirebaseAuth _auth = FirebaseAuth.instance;
   @override
   void initState() {
     loadUserDonationBookings();
@@ -37,10 +40,9 @@ class _MyBookingsScreenState extends State<MyBookingsScreen> {
         widgets.add(
           BookingInfo(
               onPressed: () {
-                print("abcd");
                 Navigator.pushNamed(
                   context,
-                  '/bookingScreen',
+                  bookingScreenID,
                   arguments: donationBookings[i],
                 );
               },
@@ -60,6 +62,25 @@ class _MyBookingsScreenState extends State<MyBookingsScreen> {
 
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        backgroundColor: Colors.white,
+        actions: [
+          TextButton(
+            child: Icon(Icons.logout_rounded, color: Color(0xFFF46A6A)),
+            onPressed: () async {
+              try {
+                await _auth.signOut();
+                Navigator.pushNamedAndRemoveUntil(
+                    context, loginScreenID, (route) => false);
+              } on FirebaseAuthException catch (e) {
+                print(e.code);
+              } catch (e) {
+                print(e.toString());
+              }
+            },
+          ),
+        ],
+      ),
       floatingActionButton: FloatingActionButton(
         backgroundColor: Colors.white,
         child: Icon(
@@ -68,7 +89,7 @@ class _MyBookingsScreenState extends State<MyBookingsScreen> {
           size: 32,
         ),
         onPressed: () {
-          Navigator.pushNamed(context, '/homeScreen');
+          Navigator.pushNamed(context, homeScreenID);
         },
       ),
       backgroundColor: Color(0xFFF46A6A),

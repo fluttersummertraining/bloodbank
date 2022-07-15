@@ -8,6 +8,7 @@ import '../models/donation_booking.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
 import '../services/firestore_source.dart';
+import "../services/routing.dart";
 
 class BookingScreen extends StatefulWidget {
   BookingScreen({Key? key, required this.bloodBank})
@@ -136,7 +137,7 @@ class _BookingScreenState extends State<BookingScreen> {
                 await x.deleteDonationBooking(widget.donationBooking!);
 
                 Navigator.pushNamedAndRemoveUntil(
-                    context, "/myBookingsScreen", (route) => false);
+                    context, myBookingScreenID, (route) => false);
               },
             )
           : null,
@@ -238,9 +239,9 @@ class _BookingScreenState extends State<BookingScreen> {
                       } else {
                         await x.updateDonationBooking(widget.donationBooking!);
                       }
-                      //Navigator.pushNamedAndRemoveUntil(context, newRouteName, )
+
                       Navigator.pushNamedAndRemoveUntil(
-                          context, "/myBookingsScreen", (route) => false);
+                          context, myBookingScreenID, (route) => false);
                     }),
               ),
             ),

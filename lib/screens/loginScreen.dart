@@ -1,3 +1,4 @@
+import 'package:bloodbank/services/routing.dart';
 import "package:flutter/material.dart";
 import '../common_widgets/pageLayoutWidgets.dart';
 import '../common_widgets/common_widgets.dart';
@@ -14,6 +15,8 @@ class _LoginScreenState extends State<LoginScreen> {
   TextEditingController emailController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
 
+  bool isSignInForm = true;
+
   Future<void> signIn() async {
     try {
       await _auth.signInWithEmailAndPassword(
@@ -21,7 +24,7 @@ class _LoginScreenState extends State<LoginScreen> {
         password: passwordController.text,
       );
       Navigator.pushNamedAndRemoveUntil(
-          context, '/myBookingsScreen', (Route<dynamic> route) => false);
+          context, myBookingScreenID, (Route<dynamic> route) => false);
     } on FirebaseAuthException catch (e) {
       print(e.code);
     } catch (e) {
@@ -36,7 +39,7 @@ class _LoginScreenState extends State<LoginScreen> {
         password: passwordController.text,
       );
       Navigator.pushNamedAndRemoveUntil(
-          context, '/homeScreen', (Route<dynamic> route) => false);
+          context, homeScreenID, (Route<dynamic> route) => false);
     } on FirebaseAuthException catch (e) {
       if (e.code == 'weak-password') {
         print('The password provided is too weak.');
@@ -142,7 +145,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         child: Center(
                           child: TextButton(
                             child: Text(
-                              "Sign In",
+                              isSignInForm ? "Sign In" : "Register",
                             ),
                             style: TextButton.styleFrom(
                               backgroundColor: Color(0xFFECEBEB),
@@ -156,11 +159,41 @@ class _LoginScreenState extends State<LoginScreen> {
                               ),
                             ),
                             onPressed: () async {
-                              //await signUp();
-                              await signIn();
+                              if (isSignInForm)
+                                await signIn();
+                              else
+                                await signUp();
                             },
                           ),
                         ),
+                      ),
+                    ],
+                  ),
+                  SizedBox(height: 10),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text(
+                        isSignInForm ? "New User?" : "Have an account?",
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 17,
+                        ),
+                      ),
+                      TextButton(
+                        child: Text(
+                          isSignInForm ? "Register here" : "Login",
+                          style: TextStyle(
+                            color: Colors.yellowAccent,
+                            decoration: TextDecoration.underline,
+                            fontSize: 17,
+                          ),
+                        ),
+                        onPressed: () {
+                          setState(() {
+                            isSignInForm = !isSignInForm;
+                          });
+                        },
                       ),
                     ],
                   ),

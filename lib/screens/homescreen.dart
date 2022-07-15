@@ -1,5 +1,6 @@
 import 'package:bloodbank/models/blood_bank.dart';
 import 'package:bloodbank/services/firestore_source.dart';
+import 'package:bloodbank/services/routing.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import "package:flutter/material.dart";
@@ -38,25 +39,6 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Colors.white,
-        actions: [
-          TextButton(
-            child: Icon(Icons.logout_rounded, color: Color(0xFFF46A6A)),
-            onPressed: () async {
-              try {
-                await _auth.signOut();
-                Navigator.pushNamedAndRemoveUntil(
-                    context, "/loginScreen", (route) => false);
-              } on FirebaseAuthException catch (e) {
-                print(e.code);
-              } catch (e) {
-                print(e.toString());
-              }
-            },
-          ),
-        ],
-      ),
       backgroundColor: Color(0xFFF46A6A),
       body: SafeArea(
         child: Padding(
@@ -90,7 +72,7 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
           BloodBankInfo(
             onPressed: () {
-              Navigator.pushNamed(context, "/bookingScreen",
+              Navigator.pushNamed(context, bookingScreenID,
                   arguments: dbBloodBanks[i]);
             },
             bloodBankName: dbBloodBanks[i].name!,
